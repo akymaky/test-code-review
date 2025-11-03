@@ -31,13 +31,13 @@ export function setWaitingInterval(handler: Function, timeouts: number[], ...arg
         handler(argsInternal);
         map.set(
             waitingIntervalId,
-            window.setTimeout(internalHandler, getLastUntilOneLeft(timeouts), ...args)
+            setTimeout(internalHandler, getLastUntilOneLeft(timeouts), ...args)
         );
     }
 
     map.set(
         waitingIntervalId,
-        window.setTimeout(internalHandler, getLastUntilOneLeft(timeouts), ...args)
+        setTimeout(internalHandler, getLastUntilOneLeft(timeouts), ...args)
     );
 
     return waitingIntervalId;
