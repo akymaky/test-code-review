@@ -19,12 +19,12 @@ function iterateUntilLast(arr: readonly number[]): () => number {
  * Additionally, we pass an array of timeouts to define an increasing delay period.
  * For example, given the array [16, 8, 4, 2], the delays will be 2, 4, 8, 16, 16, 16...
  */
-export function setWaitingInterval(handler: Function, timeouts: number[], ...args: any[]): number {
+export function setWaitingInterval<T extends unknown[]>(handler: (...args: T) => void, timeouts: readonly number[], ...args: T): number {
     waitingIntervalId += 1;
 
     const getLastUntilOneLeft = iterateUntilLast(timeouts);
 
-    function internalHandler(...argsInternal: any[]): void {
+    function internalHandler(...argsInternal: T): void {
         handler(...argsInternal);
         map.set(
             waitingIntervalId,
