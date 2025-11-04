@@ -25,7 +25,7 @@ export function setWaitingInterval(handler: Function, timeouts: number[], ...arg
     const getLastUntilOneLeft = iterateUntilLast(timeouts);
 
     function internalHandler(...argsInternal: any[]): void {
-        handler(argsInternal);
+        handler(...argsInternal);
         map.set(
             waitingIntervalId,
             setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
