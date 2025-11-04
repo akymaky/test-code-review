@@ -2,18 +2,13 @@ const map = new Map<number, number>();
 
 let waitingIntervalId = 0;
 
-function getLastUntilOneLeft(arr: number[]): number {
-    if (arr.length > 1) {
-        const item = arr.pop();
-
-        if(typeof item !== 'number'){
-            throw new Error('Invalid item type');
-        }
-
-        return item;
+function iterateUntilLast(arr: readonly number[]): () => number {
+    if (!arr.length) {
+        throw new Error('Array must not be empty');
     }
 
-    return arr[0];
+    let i = arr.length - 1;
+    return () => (i > 0 ? arr[i--] : arr[0]);
 }
 
 /**
@@ -27,17 +22,19 @@ function getLastUntilOneLeft(arr: number[]): number {
 export function setWaitingInterval(handler: Function, timeouts: number[], ...args: any[]): number {
     waitingIntervalId += 1;
 
+    const getLastUntilOneLeft = iterateUntilLast(timeouts);
+
     function internalHandler(...argsInternal: any[]): void {
         handler(argsInternal);
         map.set(
             waitingIntervalId,
-            setTimeout(internalHandler, getLastUntilOneLeft(timeouts), ...args)
+            setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
         );
     }
 
     map.set(
         waitingIntervalId,
-        setTimeout(internalHandler, getLastUntilOneLeft(timeouts), ...args)
+        setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
     );
 
     return waitingIntervalId;
