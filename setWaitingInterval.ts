@@ -25,9 +25,17 @@ export function setWaitingInterval<T extends unknown[]>(handler: (...args: T) =>
     const getLastUntilOneLeft = iterateUntilLast(timeouts);
 
     function internalHandler(...argsInternal: T): void {
+        if (!map.has(id)) {
+            return
+        }
+
         try {
             handler(...argsInternal);
         } finally {
+            if (!map.has(id)) {
+                return
+            }
+
             map.set(
                 id,
                 setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
@@ -46,7 +54,7 @@ export function setWaitingInterval<T extends unknown[]>(handler: (...args: T) =>
 export function clearWaitingInterval(intervalId: number): void {
     const realTimeoutId = map.get(intervalId);
 
-    if (typeof realTimeoutId === 'number') {
+    if (realTimeoutId !== undefined) {
         map.delete(intervalId);
         clearTimeout(realTimeoutId);
     }
