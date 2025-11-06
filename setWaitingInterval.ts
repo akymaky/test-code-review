@@ -1,4 +1,6 @@
-const map = new Map<number, number>();
+type TimerId = ReturnType<typeof setTimeout>;
+
+const map = new Map<number, TimerId>();
 
 let waitingIntervalId = 0;
 
