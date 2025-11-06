@@ -25,11 +25,14 @@ export function setWaitingInterval<T extends unknown[]>(handler: (...args: T) =>
     const getLastUntilOneLeft = iterateUntilLast(timeouts);
 
     function internalHandler(...argsInternal: T): void {
-        handler(...argsInternal);
-        map.set(
-            id,
-            setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
-        );
+        try {
+            handler(...argsInternal);
+        } finally {
+            map.set(
+                id,
+                setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
+            );
+        }
     }
 
     map.set(
