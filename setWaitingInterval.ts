@@ -44,6 +44,7 @@ export function clearWaitingInterval(intervalId: number): void {
     const realTimeoutId = map.get(intervalId);
 
     if (typeof realTimeoutId === 'number') {
+        map.delete(intervalId);
         clearTimeout(realTimeoutId);
     }
 }
