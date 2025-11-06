@@ -20,24 +20,24 @@ function iterateUntilLast(arr: readonly number[]): () => number {
  * For example, given the array [16, 8, 4, 2], the delays will be 2, 4, 8, 16, 16, 16...
  */
 export function setWaitingInterval<T extends unknown[]>(handler: (...args: T) => void, timeouts: readonly number[], ...args: T): number {
-    waitingIntervalId += 1;
+    const id = ++waitingIntervalId;
 
     const getLastUntilOneLeft = iterateUntilLast(timeouts);
 
     function internalHandler(...argsInternal: T): void {
         handler(...argsInternal);
         map.set(
-            waitingIntervalId,
+            id,
             setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
         );
     }
 
     map.set(
-        waitingIntervalId,
+        id,
         setTimeout(internalHandler, getLastUntilOneLeft(), ...args)
     );
 
-    return waitingIntervalId;
+    return id;
 }
 
 export function clearWaitingInterval(intervalId: number): void {
